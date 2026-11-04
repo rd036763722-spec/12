@@ -1,0 +1,27 @@
+name: Build EXE
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install requirements
+        run: python -m pip install --upgrade pyinstaller pywebview
+
+      - name: Build
+        run: python -m PyInstaller --onefile --noconsole --name ChromeServerWizard --collect-all webview app.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChromeServerWizard
+          path: dist/ChromeServerWizard.exe
